@@ -12,11 +12,12 @@
 
     <!-- Bootstrap core CSS -->
     {{ css('vendor/bootstrap/css/bootstrap.min') }}
-    <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
 
     <!-- Custom styles for this template -->
     {{ css('css/scrolling-nav') }}
-    <!-- <link href="css/scrolling-nav.css" rel="stylesheet"> -->
+
+    <!-- Typeahead for this template -->
+    {{ css('css/typeahead') }}
 
   </head>
 
@@ -52,12 +53,10 @@
           <div class="col-lg-8 mx-auto">
             <h2>Try it yourself</h2>
             <p class="lead">Set a location in order to get the lastest 9 posts.</p>
-            <form class="form-inline">
-			  <label class="sr-only" for="inlineFormInputName2">Name</label>
-			  <input type="text" class="form-control mb-2 mr-sm-2 col-lg-10" id="inlineFormInputName2" placeholder="London Edge">
-
-			  <button type="submit" class="btn btn-primary mb-2">Submit</button>
-			</form>
+            <form class="form-inline" onsubmit="return false;">
+      			  <label class="sr-only" for="inlineFormInputName2">Name</label>
+      			  <input type="text" class="form-control mb-2 mr-sm-2 typeahead" id="inlineFormInputName2" placeholder="London Edge">
+      			</form>
           </div>
         </div>
       </div>
@@ -73,17 +72,21 @@
 
     <!-- Bootstrap core JavaScript -->
     {{ script('vendor/jquery/jquery.min') }}
-    <!-- <script src="vendor/jquery/jquery.min.js"></script> -->
     {{ script('vendor/bootstrap/js/bootstrap.bundle.min') }}
-    <!-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
 
     <!-- Plugin JavaScript -->
     {{ script('vendor/jquery-easing/jquery.easing.min') }}
-    <!-- <script src="vendor/jquery-easing/jquery.easing.min.js"></script> -->
 
     <!-- Custom JavaScript for this theme -->
     {{ script('js/scrolling-nav') }}
-    <!-- <script src="js/scrolling-nav.js"></script> -->
+    
+    <!-- typeahead Plugin  -->
+    {{ script('js/typeahead.bundle') }}
+
+    <!-- My App  -->
+    {{ script('js/my_app') }}
+
+  
 
   </body>
 
