@@ -12,7 +12,8 @@ class ApiController {
 		session.put('facebook_token', facebook_token)
 
 		response.json({
-			success: true
+			success: true,
+			facebook_token: session.get('facebook_token')
 		})
 
 	}
