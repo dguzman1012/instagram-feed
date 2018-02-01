@@ -19,21 +19,20 @@ class ApiController {
 	}
 
 	async getFacebookLocations({request, response, session}){
-		let query = request.get("q", "London Eyes")
-		response.send(query)
-		// const url = "https://graph.facebook.com/v2.11/search?type=place&q="+query+"&fields=name,checkins,picture,location,rating_count&access_token=" + session.get("facebook_token");
-		// const res = await got(url)
-		// const locations = JSON.parse(res.body)
-		// if (locations.data){
-		// 	response.json({
-		// 		success: true,
-		// 		locations: locations.data
-		// 	})
-		// }else{
-		// 	response.json({
-		// 		success: false
-		// 	})
-		// }
+		let query = request.get()
+		const url = "https://graph.facebook.com/v2.11/search?type=place&q="+query.q+"&fields=name,checkins,picture,location,rating_count&access_token=" + session.get("facebook_token");
+		const res = await got(url)
+		const locations = JSON.parse(res.body)
+		if (locations.data){
+			response.json({
+				success: true,
+				locations: locations.data
+			})
+		}else{
+			response.json({
+				success: false
+			})
+		}
 					
 
 
