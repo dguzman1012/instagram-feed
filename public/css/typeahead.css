@@ -71,3 +71,8 @@
 .gist {
   font-size: 14px;
 }*/
+
+.empty-message {
+  padding: 5px 10px;
+ text-align: center;
+}

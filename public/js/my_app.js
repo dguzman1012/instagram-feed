@@ -1,42 +1,54 @@
-var substringMatcher = function(strs) {
-  return function findMatches(q, cb) {
-    var matches, substringRegex;
 
-    // an array that will be populated with substring matches
-    matches = [];
+$(document).ready(function(){
 
-    // regex used to determine if a string contains the substring `q`
-    substrRegex = new RegExp(q, 'i');
-
-    // iterate through the pool of strings and for any string that
-    // contains the substring `q`, add it to the `matches` array
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
+    $.ajax({ 
+      url: '/api/v1/updateToken',
+      type: 'POST',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       }
     });
 
-    cb(matches);
-  };
-};
 
-var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-  'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-  'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-  'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-];
+    var bestPictures = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: '../data/locations/facebook_location.json',
+      remote: {
+      url: '../api/v1/getFacebookLocations?q=%QUERY',
+      wildcard: '%QUERY'
+      }
+    });
 
-$('.typeahead').typeahead({
-  hint: true,
-  highlight: true,
-  minLength: 1
-},
-{
-  name: 'states',
-  source: substringMatcher(states)
+    $('.typeahead').typeahead(null, {
+      name: 'facebook-location',
+      display: 'name',
+      source: bestPictures,
+      templates: {
+        empty: [
+          '<div class="empty-message">',
+            'unable to find any location that match the current query',
+          '</div>'
+        ].join('\n'),
+        pending: [
+          '<div class="empty-message">',
+            'Looking for results...',
+          '</div>'
+        ].join('\n'),
+        suggestion: function(data) {
+          if (data.location.city !== undefined && data.location.country !== undefined){
+            return '<div><strong>' + data.name + '</strong> – ' + data.location.city + ', '+ data.location.country +'</div>';
+          }else{
+            return '<div><strong>' + data.name + '</strong></div>';
+          }
+        }
+      }
+    });
+
+    $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+      console.log('Selection: ', suggestion);
+    });
+
+
+
 });
