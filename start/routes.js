@@ -20,8 +20,8 @@ Route.on('/').render('welcome');
 Route
 .group(() => {
 	Route.post('updateToken', 'ApiController.getFacebookToken');
-	Route.get('getFacebookToken', 'ApiController.getInstagramToken');
 	Route.get('getFacebookLocations', 'ApiController.getFacebookLocations');
+	Route.get('getFacebookToken', 'ApiController.getInstagramPosts');
 })
 .prefix('api/v1');
 
