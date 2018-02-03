@@ -41,22 +41,52 @@ class ApiController {
 		}
 	}
 
-	getInstagramToken({request, response}){
+	async getInstagramPosts({request, response}){
 
-		response.send("Epale")
+		let query = request.get()
+		if (!Object.keys(query).length){
+			response.json({success:false, data:{}})
+			return;
+		}
 
-		// https://api.instagram.com/v1/locations/search?facebook_places_id=139080022815160&access_token=32417473.d2d6896.a3d0ece5a1a54ac6b3c2245a6e7f70a6
-		// https://api.instagram.com/v1/locations/787861/media/recent?access_token=32417473.d2d6896.a3d0ece5a1a54ac6b3c2245a6e7f70a6
-		// 
-		/*
-		FACEBOOK_CLIENT_ID=165456687426285
-FACEBOOK_CLIENT_SECRET=5daaee1ef287b57a1805ec1da672987d
+		if (query.fb_location === undefined){
+			response.json({success:false, data:{}})
+			return;				
+		}
 
-INSTAGRAM_CLIENT_ID=d2d689686d704a9abc55caf030bc1c5e
-INSTAGRAM_CLIENT_SECRET=6d1ab31e70f9415293a4b2e46655cdee
-INSTAGRAM_CODE=c9e89d33365f435a8b6243cf26a65f08
-INSTAGRAM_ACCESS_TOKEN=32417473.d2d6896.a3d0ece5a1a54ac6b3c2245a6e7f70a6
+		const facebook_location = query.fb_location;
+		// response.send(facebook_location); 
+		/**
+		 * Getting the IG location ID
 		 */
+		const url = 'https://api.instagram.com/v1/locations/search?facebook_places_id='+ facebook_location +'&access_token='+ Env.get('INSTAGRAM_ACCESS_TOKEN');
+		const res = await got(url)
+		const ig_location = JSON.parse(res.body).data[0]
+
+		/**
+		 * Getting the lastest posts
+		 */
+		if (!Object.keys(ig_location).length){
+			response.json({success:false, data:[]})
+			return;
+		}
+
+		if (ig_location.id === undefined){
+			response.json({success:false, data:[]})
+			return;				
+		}
+
+		const url_ig = 'https://api.instagram.com/v1/locations/'+ ig_location.id +'/media/recent?access_token='+ Env.get('INSTAGRAM_ACCESS_TOKEN');
+		const ig_posts_data = await got(url_ig)
+		const posts = JSON.parse(ig_posts_data.body).data
+
+		if (posts.length >=0){
+			response.json(posts)
+		}else{
+			response.json({
+				success: false
+			})
+		}
 	}
 
 }

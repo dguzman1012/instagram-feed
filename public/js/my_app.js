@@ -47,6 +47,37 @@ $(document).ready(function(){
 
     $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
       console.log('Selection: ', suggestion);
+
+      $('.container').find('.ig_post').not('.card-template').remove();
+
+      if (!Object.keys(suggestion).length){
+        return;
+      }
+      if (suggestion.id === undefined){
+       return;       
+      }
+
+      $.ajax({ 
+        url: '/api/v1/getInstagramPosts?fb_location=' + suggestion.id,
+        type: 'GET',
+        success: function(response){
+          $.each(response, function( index, post ) {
+            var element = $('.container').find('.card-template').clone();
+
+            element.find('a').attr("href", post.link);
+            element.find('.card img').attr("src", post.images.standard_resolution.url);
+            element.find('.card .card-body h4').html(post.caption.from.username);
+            element.find('.card .card-body p').html(post.caption.text);
+
+            element.removeClass('displaynone');
+            element.removeClass('card-template');
+            element.insertBefore('.card-template');
+          });
+
+          console.log("Locations: ", response);
+        }
+      });
+
     });
 
 

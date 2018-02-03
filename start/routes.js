@@ -21,7 +21,7 @@ Route
 .group(() => {
 	Route.post('updateToken', 'ApiController.getFacebookToken');
 	Route.get('getFacebookLocations', 'ApiController.getFacebookLocations');
-	Route.get('getFacebookToken', 'ApiController.getInstagramPosts');
+	Route.get('getInstagramPosts', 'ApiController.getInstagramPosts');
 })
 .prefix('api/v1');
 
